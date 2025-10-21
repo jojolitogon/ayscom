@@ -62,8 +62,11 @@ fi
 **Loops:**
 ```bash
 #!/bin/bash
-for file in *.csv; do
-  echo "Processing $file"
+
+names=("Jaime" "Ismael" "Esther" "Adrian" "Jorge" "Juan" "Miguel" "Oscar" "Sergio" "Guilherme" "Pedro" "Pedro C" "Tomas")
+
+for name in "${names[@]}"; do
+  echo "Nombre: $name"
 done
 ```
 ### WORKING WITH FILES AND DIRECTORIES
