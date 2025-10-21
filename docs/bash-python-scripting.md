@@ -66,7 +66,7 @@ fi
 names=("Jaime" "Ismael" "Esther" "Adrian" "Jorge" "Juan" "Miguel" "Oscar" "Sergio" "Guilherme" "Pedro" "Pedro C" "Tomas")
 
 for name in "${names[@]}"; do
-  echo "Nombre: $name"
+  echo "Name: $name"
 done
 ```
 ### WORKING WITH FILES AND DIRECTORIES
