@@ -1,7 +1,7 @@
 # BASIC SCRIPTING WITH BASH AND PYTHON
 ## INTRODUCTION TO SCRIPTING
 ### WHAT IS SCRIPTING
-Scripting is the process of writing small programs—called scripts—that automate tasks on a computer. Unlike full-scale software applications, scripts are usually short, focused, and run line by line without needing to be compiled.<br><br>
+Scripting is the process of **writing small programs** —called scripts— that **automate tasks** on a computer. Unlike full-scale software applications, scripts are usually short, focused, and run line by line without needing to be compiled.<br><br>
 Key traits of scripts:<br>
 - Interpreted, not compiled (they run directly)
 - Great for automating repetitive tasks
@@ -29,7 +29,7 @@ Automation is about reducing manual effort and human error by letting computers 
 | **Calling APIs or complex logic**| Difficult                       | Designed for this                      |
 | **Scheduling (cron jobs)**      | Perfect fit                     | Works, often called from Bash          |
 ## BASH SCRIPTING BASICS
-Bash is the default command-line shell in many Unix-based systems. You can run individual commands—or group them in a .sh file to create a script.<br><br>
+Bash is the default command-line shell in many Unix-based systems. You can run individual commands—or group them in a .sh file to create a script.
 ### STEPS TO CREATE AND RUN A BASH SCRIPT
 1.	Create a new file: nano myscript.sh
 2.	Add this at the top: #!/bin/bash (shebang line)
