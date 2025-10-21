@@ -363,7 +363,354 @@ Example content:
   Hat,NaN,2
   backpack,29.90,1
 ```
+**Step-by-Step Script**
+```python
+# clean_merge_csvs.py
+import pandas as pd
+import os
+from glob import glob
+
+# Step 1: Define the input folder
+input_folder = "data"
+output_file = "output/merged_cleaned.csv"
+
+# Step 2: Create output folder if it doesn’t exist
+os.makedirs("output", exist_ok=True)
+
+# Step 3: Find all CSV files in the folder
+csv_files = glob(os.path.join(input_folder, "*.csv"))
+
+# Step 4: Read and clean each file
+cleaned_dfs = []
+
+for file in csv_files:
+    print(f"Processing {file}")
+    df = pd.read_csv(file)
+    # Clean data: remove nulls
+    df = df.dropna()
+    # Normalize column values
+    df["product"] = df["product"].str.strip().str.lower()
+    # Convert price to float
+    df["price"] = pd.to_numeric(df["price"], errors="coerce")
+    # Re-clean in case price conversion created new nulls
+    df = df.dropna()
+    cleaned_dfs.append(df)
+
+# Step 5: Merge all cleaned data
+merged_df = pd.concat(cleaned_dfs, ignore_index=True)
+
+# Step 6: Save final output
+merged_df.to_csv(output_file, index=False)
+
+print(f"Merged file saved as: {output_file}")
+```
+**How to Run it**
+1.	Save the script as clean_merge_csvs.py
+2.	Make sure you have the pandas library installed:
+```bash
+pip install pandas
+```
+3.	Run the script:
+```bash
+python3 clean_merge_csvs.py
+```
+**What This Teaches**
+- glob() for reading multiple files
+- pandas cleaning tools: dropna, str.strip(), str.lower(), to_numeric
+- os.makedirs() to ensure output folders exist
+- Data merging with pd.concat()
+
+**Optional Challenges**
+- Add logging with logging.info()
+- Add command-line arguments using argparse
+- Automatically add a column for the file source (e.g., df["source"] = file)
 ## COMBINING BASH AND PYTHON
-Using Bash to control Python scripts is a powerful way to build lightweight automation pipelines. Bash handles system-level orchestration (scheduling, file checking), while Python performs the logic-heavy data processing.<br>
+Using Bash to control Python scripts is a powerful way to build lightweight automation pipelines. Bash handles system-level orchestration (scheduling, file checking), while Python performs the logic-heavy data processing.
+### CALLING PYTHON SCRIPTS FROM BASH
+To call a Python script from a Bash script:
+```python
+#!/bin/bash
+echo "Starting Python script..."
+python3 process_data.py
+echo "Done."
+```
+This executes the Python file just like a regular command. Make sure the Python script is executable and has a valid shebang (#!/usr/bin/env python3) if you want to call it directly.
+### PASSING ARGUMENTS FROM BASH TO PYTHON
+You can send values from your Bash script into Python using command-line arguments. This makes your Python scripts reusable for different inputs and scenarios.<br>
+**Bash Script:**
+```bash
+#!/bin/bash
 
+FOLDER="data"
+OUTPUT="output/cleaned.csv"
 
+python3 process_data.py "$FOLDER" "$OUTPUT"
+```
+**Python Script (process_data.py):**
+```python
+import sys
+import pandas as pd
+import os
+
+# Receive arguments
+input_folder = sys.argv[1]
+output_file = sys.argv[2]
+
+print(f"Reading files from {input_folder}...")
+print(f"Saving cleaned data to {output_file}...")
+```
+### CREATING A FOLDER-WATCHING MINI-PIPELINE
+Let’s say you want to check every minute whether new CSV files have been added to a folder. If so, process them.<br>
+**Bash Script: watch_and_run.sh**
+```bash
+#!/bin/bash
+
+INPUT_DIR="incoming"
+PROCESSED_DIR="processed"
+mkdir -p "$PROCESSED_DIR"
+
+# Watch for new files every 60 seconds
+while true; do
+  for file in "$INPUT_DIR"/*.csv; do
+    if [ -f "$file" ]; then
+      echo "Processing $file..."
+      python3 clean_and_save.py "$file"
+      mv "$file" "$PROCESSED_DIR"/
+    fi
+  done
+  sleep 60
+done
+```
+**Python Script: clean_and_save.py**
+```python
+import sys
+import pandas as pd
+import os
+
+file_path = sys.argv[1]
+print(f"Cleaning file: {file_path}")
+
+df = pd.read_csv(file_path)
+df = df.dropna()
+df["product"] = df["product"].str.strip().str.lower()
+
+filename = os.path.basename(file_path)
+output_path = f"output/cleaned_{filename}"
+os.makedirs("output", exist_ok=True)
+df.to_csv(output_path, index=False)
+print(f"Saved cleaned file to {output_path}")
+```
+This simulates a lightweight real-time ETL process: check → clean → store.<br>
+### EXAMPLE: AUTOMATE AN ETL-LIKE PROCESS
+**Goal:** Extract a CSV, transform it with Python, and load it into a database or clean folder—all triggered by a Bash script.<br>
+**Bash: daily_etl.sh**
+```bash
+#!/bin/bash
+
+# Step 1: Download data
+DATE=$(date +%F)
+curl -o "sales_$DATE.csv" "https://example.com/sales.csv"
+
+# Step 2: Run transformation
+python3 etl_transform.py "sales_$DATE.csv"
+
+# Step 3: Move to archive
+mv "sales_$DATE.csv" archive/
+```
+**Python: etl_transform.py**
+```python
+import sys
+import pandas as pd
+import os
+
+input_file = sys.argv[1]
+df = pd.read_csv(input_file)
+df = df.dropna()
+df["product"] = df["product"].str.lower().str.strip()
+
+os.makedirs("cleaned", exist_ok=True)
+df.to_csv(f"cleaned/cleaned_{os.path.basename(input_file)}", index=False)
+```
+Run this script daily with cron, and you have a basic ETL pipeline in production<br>
+### BASH-PYTHON DEMO
+**What's Inside:**
+- etl_runner.sh – Bash script that triggers the ETL pipeline.
+- etl_process.py – Python script that cleans a CSV and loads it into a SQLite database.
+- incoming/products.csv – Sample data file to simulate incoming files.
+- archive/ – Folder where processed files are moved.
+- db/ – SQLite database is saved here after running the Python script.
+
+**How to Run:**
+1.	Unzip the folder and navigate inside.
+2.	Make the Bash script executable:
+```bash
+chmod +x etl_runner.sh
+```
+3.	Run the pipeline:
+```bash
+./etl_runner.sh
+```
+## BEST PRACTICES FOR SCRIPTING
+Writing scripts isn’t just about making things work—it’s about making them clear, safe, and maintainable. These practices will help your scripts scale with your team and your data.
+### WRITE READABLE SCRIPTS (COMMENTS AND STRUCTURE)
+**Why it matters:** Your future self—or your colleagues—should be able to read your code easily. Readable code saves debugging time and builds team trust.<br>
+**Best practices:**
+- Use clear, descriptive variable names
+- Break code into functions or logical blocks
+- Add comments explaining why, not just what
+- Group related steps together
+
+**Example (Bash):**
+```bash
+# Download today's sales report and move to the data folder
+
+URL="https://example.com/sales.csv"
+curl -o daily_sales.csv "$URL"
+mv daily_sales.csv data/
+```
+**Example (Python):**
+```python
+# Clean product names and remove invalid prices
+
+df["product"] = df["product"].str.strip().str.lower()
+df["price"] = pd.to_numeric(df["price"], errors="coerce")
+df.dropna(subset=["price"], inplace=True)
+```
+### USE set -e AND trap IN BASH
+**Why it matters:** Bash scripts should fail safely and visibly when something goes wrong.<br>
+**Best practices:**
+- set -e → exits the script if any command fails
+- trap → define a cleanup or alert when errors happen
+
+**Example:**
+```bash
+#!/bin/bash
+set -e
+trap 'echo "Something went wrong. Exiting..."' ERR
+echo "Starting ETL job..."
+python3 etl_process.py
+echo "ETL completed."
+```
+### USE argparse AND logging IN PYTHON
+**Why it matters:** Make your scripts flexible and debuggable.<br>
+**argparse –** For command-line arguments:
+```python
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--input", required=True)
+args = parser.parse_args()
+print(f"Processing file: {args.input}")
+```
+**logging –** For consistent output (instead of print()):
+```python
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logging.info("Script started")
+```
+### USE VERSION CONTROL (GIT BASICS)
+**Why it matters:** Track changes, collaborate, and roll back when needed.<br>
+**Core Git commands:**
+```bash
+git init            # Start version control
+git add script.py   # Stage changes
+git commit -m "Add initial ETL script"
+git log             # See history
+```
+**Extra tips:**
+- Use .gitignore to skip folders like ```__pycache__```, *.db, or output/
+- Write meaningful commit messages
+- Use branches for different versions or experiments
+### WHEN TO SCALE TO TOOLS LIKE AIRFLOW
+**Scripting is great for:**
+- Simple ETL pipelines
+- One-time automation
+- Learning and prototyping
+
+**But consider orchestration tools when you need:**
+- Scheduled, reliable execution (daily/hourly jobs)
+- Dependency handling (run this after that)
+- Monitoring, retries, notifications
+- Complex DAGs (directed acyclic graphs)
+## FINAL HANDS-ON PROJECT: AUTOMATED SALES PIPELINE
+A guided challenge that combines everything students have learned—Bash, Python, automation, and optional data visualization.
+### PROJECT GOAL
+Build a mini ETL pipeline that:
+1.	Detects new CSV files in a folder
+2.	Processes and cleans them using Python (pandas)
+3.	Loads the data into a database (SQLite)
+4.	(Optional) Visualizes the results in Power BI or Grafana
+### DELIVERABLES
+Each student/team should deliver:<br><br>
+Folder structure:
+```bash
+automated_sales_pipeline/
+├── incoming/
+├── archive/
+├── db/
+├── etl_runner.sh           # Bash script
+├── etl_process.py          # Python script
+├── sample_data.csv         # Test data
+└── README.md               # Instructions
+```
+### STEP-BY-STEP INSTRUCTIONS
+#### BASH SCRIPT: etl_runner.sh
+This script:
+- Looks for new .csv files in incoming/
+- Calls the Python script for each file
+- Moves processed files to archive/
+
+**Example:**
+```bash
+#!/bin/bash
+
+INPUT_DIR="incoming"
+ARCHIVE_DIR="archive"
+mkdir -p "$INPUT_DIR" "$ARCHIVE_DIR"
+
+for file in "$INPUT_DIR"/*.csv; do
+  if [ -f "$file" ]; then
+    echo "Processing $file..."
+    python3 etl_process.py "$file"
+    mv "$file" "$ARCHIVE_DIR"/
+    echo "Archived $file"
+  fi
+done
+```
+#### PYTHON SCRIPT: etl_process.py
+This script:
+- Reads the CSV file
+- Cleans data using pandas
+- Loads it into a SQLite database
+
+**Example:**
+```python
+import sys
+import os
+import pandas as pd
+import sqlite3
+
+# Input from Bash
+file_path = sys.argv[1]
+
+# Read and clean the data
+df = pd.read_csv(file_path)
+df.dropna(inplace=True)
+df["product"] = df["product"].str.strip().str.lower()
+
+# Load into SQLite
+os.makedirs("db", exist_ok=True)
+conn = sqlite3.connect("db/sales.db")
+df.to_sql("sales", conn, if_exists="append", index=False)
+conn.close()
+
+print(f"Loaded {len(df)} rows into the database.")
+```
+#### OPTIONAL VISUALIZATION
+**OPTION A - GRAFANA**
+- Set up Grafana + SQLite plugin or push to PostgreSQL
+- Build a dashboard using SQL queries
+
+**OPTION B - POWER BI**
+- Connect to the sales.db SQLite database
+- Create charts: total sales, top products, etc.
