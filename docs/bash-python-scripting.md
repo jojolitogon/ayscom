@@ -119,9 +119,9 @@ Bash is great for automating the first part of an ETL process**—Extract**.<br>
 **Example script:**
 ```bash
 #!/bin/bash
-URL=\"https://example.com/data.csv\"
+URL=https://raw.githubusercontent.com/estelaromer/csv-examples/refs/heads/main/data.csv
 DATE=$(date +%F)
-FILENAME=\"sales_$DATE.csv\"
+FILENAME=sales_$DATE.csv
 
 wget $URL -O $FILENAME
 mkdir -p data/
