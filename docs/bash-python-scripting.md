@@ -87,17 +87,17 @@ While Bash isn’t built for complex data processing, you can do a lot with simp
 **cut —** extract columns from a file:
 ```bash
 #!/bin/bash
-cut -d',' -f1,3 csv/sales.csv
+cut -d',' -f1,3 files/sales.csv
 ```
 **awk —** pattern scanning and processing:
 ```bash
 #!/bin/bash
-awk -F',' '{print $1, $3}' csv/sales.csv
+awk -F',' '{print $1, $3}' files/sales.csv
 ```
 **grep —** search for lines matching a pattern:
 ```bash
 #!/bin/bash
-grep "Shoes" csv/sales.csv
+grep "Shoes" files/sales.csv
 ```
 ### SCHEDULING SCRIPTS WITH CRON
 Use cron to schedule your scripts to run automatically.<br>
@@ -256,7 +256,7 @@ for name in names:
 ### WORKING WITH FILES (open, os, glob)
 **open() —** Read/write local files:
 ```python
-with open("data.txt", "r") as f:
+with open("../files/data.txt", "r") as f:
     content = f.read()
     print(content)
 ```
