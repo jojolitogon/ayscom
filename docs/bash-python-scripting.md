@@ -265,8 +265,12 @@ with open("../files/data.txt", "r") as f:
 import os
 # Create folder
 os.mkdir("data")
+
+with open("data/new.txt", "w") as file:
+    file.write("Using os module")
+
 # Rename             
-os.rename("file.txt", "old.txt")
+os.rename("data/new.txt", "data/changed.txt")
 ```
 **glob —** Search for files using wildcards:
 ```python
