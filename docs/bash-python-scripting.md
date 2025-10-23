@@ -331,11 +331,19 @@ df.to_csv("files/clean_data.csv", index=False)
 **Reading and writing JSON:**
 ```python
 import json
+
 # Read JSON
-with open("data.json") as f:
+with open("files/data.json") as f:
     data = json.load(f)
-# Write JSON
-with open("output.json", "w") as f:
+
+print(data)
+
+data["age"] = 43
+
+print(data)
+
+# # Write JSON
+with open("files/output.json", "w") as f:
     json.dump(data, f, indent=2)
 ```
 ### APIs WITH REQUESTS
