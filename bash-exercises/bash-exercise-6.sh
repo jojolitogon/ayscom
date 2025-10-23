@@ -1,6 +1,6 @@
 #!/bin/bash
-cut -d',' -f1,3 csv/sales.csv
+cut -d',' -f1,3 files/sales.csv
 echo ""
-awk -F',' '{print $1, $3}' csv/sales.csv
+awk -F',' '{print $1, $3}' files/sales.csv
 echo ""
-grep "Shoes" csv/sales.csv
+grep "Shoes" files/sales.csv
