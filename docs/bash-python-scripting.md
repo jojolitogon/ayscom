@@ -305,11 +305,28 @@ print(df.head())
 CSV for tables, JSON for structured data like APIs.<br>
 **Reading and writing CSVs:**
 ```python
+import pandas as pd
+
 # Read CSV
-df = pd.read_csv("data.csv")
+df = pd.read_csv("files/sales.csv")
+
+# Preview data
+print(df.head())
+
+# Clean and transform
+df["Price"] = pd.to_numeric(df["Price"], errors="coerce")
+df["Product"] = df["Product"].str.strip().str.lower()
+
+# Filter rows
+df = df[df["Price"] > 0]
+
+# Add new column
+df["Total"] = df["Price"] * df["Quantity"]
+
+print(df.head())
 
 # Write CSV
-df.to_csv("clean_data.csv", index=False)
+df.to_csv("files/clean_data.csv", index=False)
 ```
 **Reading and writing JSON:**
 ```python
