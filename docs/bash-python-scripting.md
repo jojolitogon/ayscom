@@ -284,21 +284,22 @@ for file in files:
 ### DATA MANIPULATION USING PANDAS
 **pandas** is a powerful library for handling data tables (DataFrames). With pandas, you can clean, filter, and analyze datasets with just a few lines.
 ```python
-import pandas as p
-df = pd.read_csv("sales.csv")
+import pandas as pd
+df = pd.read_csv("files/sales.csv")
 
 # Preview data
 print(df.head())
 
 # Clean and transform
-df["price"] = pd.to_numeric(df["price"], errors="coerce")
-df["product"] = df["product"].str.strip().str.lower()
+df["Price"] = pd.to_numeric(df["Price"], errors="coerce")
+df["Product"] = df["Product"].str.strip().str.lower()
 
 # Filter rows
-df = df[df["price"] > 0]
+df = df[df["Price"] > 0]
 
 # Add new column
-df["total"] = df["price"] * df["quantity"]
+df["Total"] = df["Price"] * df["Quantity"]
+print(df.head())
 ```
 ### HANDLING CSV/JSON FILES
 CSV for tables, JSON for structured data like APIs.<br>
