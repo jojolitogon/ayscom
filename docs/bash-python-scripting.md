@@ -275,7 +275,9 @@ os.rename("data/new.txt", "data/changed.txt")
 **glob —** Search for files using wildcards:
 ```python
 from glob import glob
-files = glob("data/*.csv")
+
+files = glob("files/*.csv")
+
 for file in files:
     print(f"Found file: {file}")
 ```
