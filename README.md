@@ -2,6 +2,7 @@
 ## INSTRUCTIONS
 ```bash
 # clone
+git clone https://github.com/estelaromer/basic-scripting.git
 ```
 ### BASH EXERCISES
 ```bash
