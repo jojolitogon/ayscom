@@ -5,8 +5,12 @@
 ```
 ### BASH EXERCISES
 ```bash
+# Go to folder
+cd basic-scripting
+mkdir bash-exercises
+cd bash-exercises
 # Create the file
-nano bash-exercises/bash-exercise-1.sh
+nano bash-exercise-1.sh
 
 # ... Write your script ...
 
@@ -34,8 +38,10 @@ pip install --upgrade pip
 # Install dependencies
 pip install pandas requests
 
-# Save dependencies
-pip freeze > requirements.txt
+# Create the file
+nano main.py
+
+# ... Write your script ...
 
 # Run the script
 python main.py
