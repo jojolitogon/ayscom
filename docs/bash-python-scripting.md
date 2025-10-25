@@ -360,8 +360,10 @@ print(data)
 with open("files/output.json", "w") as f:
     json.dump(data, f, indent=2)
 ```
+
+[Link to JSON module](https://docs.python.org/3/library/json.html#module-json)
 ### APIs WITH REQUESTS
-Use the requests library to call REST APIs and handle responses. APIs let your script interact with web services in real time.
+Use the [requests library](https://requests.readthedocs.io/en/latest/) to call REST APIs and handle responses. APIs let your script interact with web services in real time.
 ```python
 import requests
 
@@ -374,7 +376,7 @@ else:
     print("Failed to fetch data:", response.status_code)
 ```
 ### LOGGING AND ERROR HANDLING
-**Logging —** Use logging instead of print() for production-ready scripts. Logs and exceptions help you understand and debug your scripts safely.
+**[Logging —](https://docs.python.org/3/library/logging.html#module-logging)** Use logging instead of print() for production-ready scripts. Logs and exceptions help you understand and debug your scripts safely.
 ```python
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -486,6 +488,7 @@ echo "Done."
 This executes the Python file just like a regular command. Make sure the Python script is executable and has a valid shebang (#!/usr/bin/env python3) if you want to call it directly.
 ### PASSING ARGUMENTS FROM BASH TO PYTHON
 You can send values from your Bash script into Python using command-line arguments. This makes your Python scripts reusable for different inputs and scenarios.<br>
+[Link to Python sys module](https://docs.python.org/3/library/sys.html)<br>
 **Bash Script:**
 ```bash
 #!/bin/bash
@@ -493,7 +496,7 @@ You can send values from your Bash script into Python using command-line argumen
 FOLDER="data"
 OUTPUT="output/cleaned.csv"
 
-python3 process_data.py "$FOLDER" "$OUTPUT"
+python3 bash-python-combined/process_data.py "$FOLDER" "$OUTPUT"
 ```
 **Python Script (process_data.py):**
 ```python
@@ -510,7 +513,7 @@ print(f"Saving cleaned data to {output_file}...")
 ```
 ### CREATING A FOLDER-WATCHING MINI-PIPELINE
 Let’s say you want to check every minute whether new CSV files have been added to a folder. If so, process them.<br>
-**Bash Script: watch_and_run.sh**
+**Bash Script 1: watch_and_run.sh**
 ```bash
 #!/bin/bash
 
@@ -549,56 +552,7 @@ os.makedirs("output", exist_ok=True)
 df.to_csv(output_path, index=False)
 print(f"Saved cleaned file to {output_path}")
 ```
-This simulates a lightweight real-time ETL process: check → clean → store.<br>
-### EXAMPLE: AUTOMATE AN ETL-LIKE PROCESS
-**Goal:** Extract a CSV, transform it with Python, and load it into a database or clean folder—all triggered by a Bash script.<br>
-**Bash: daily_etl.sh**
-```bash
-#!/bin/bash
 
-# Step 1: Download data
-DATE=$(date +%F)
-curl -o "sales_$DATE.csv" "https://example.com/sales.csv"
-
-# Step 2: Run transformation
-python3 etl_transform.py "sales_$DATE.csv"
-
-# Step 3: Move to archive
-mv "sales_$DATE.csv" archive/
-```
-**Python: etl_transform.py**
-```python
-import sys
-import pandas as pd
-import os
-
-input_file = sys.argv[1]
-df = pd.read_csv(input_file)
-df = df.dropna()
-df["product"] = df["product"].str.lower().str.strip()
-
-os.makedirs("cleaned", exist_ok=True)
-df.to_csv(f"cleaned/cleaned_{os.path.basename(input_file)}", index=False)
-```
-Run this script daily with cron, and you have a basic ETL pipeline in production<br>
-### BASH-PYTHON DEMO
-**What's Inside:**
-- etl_runner.sh – Bash script that triggers the ETL pipeline.
-- etl_process.py – Python script that cleans a CSV and loads it into a SQLite database.
-- incoming/products.csv – Sample data file to simulate incoming files.
-- archive/ – Folder where processed files are moved.
-- db/ – SQLite database is saved here after running the Python script.
-
-**How to Run:**
-1.	Unzip the folder and navigate inside.
-2.	Make the Bash script executable:
-```bash
-chmod +x etl_runner.sh
-```
-3.	Run the pipeline:
-```bash
-./etl_runner.sh
-```
 ## BEST PRACTICES FOR SCRIPTING
 Writing scripts isn’t just about making things work—it’s about making them clear, safe, and maintainable. These practices will help your scripts scale with your team and your data.
 ### WRITE READABLE SCRIPTS (COMMENTS AND STRUCTURE)
@@ -642,7 +596,7 @@ echo "ETL completed."
 ```
 ### USE argparse AND logging IN PYTHON
 **Why it matters:** Make your scripts flexible and debuggable.<br>
-**argparse –** For command-line arguments:
+**[argparse –](https://docs.python.org/3/library/argparse.html#module-argparse)** For command-line arguments:
 ```python
 import argparse
 parser = argparse.ArgumentParser()
@@ -659,7 +613,7 @@ logging.info("Script started")
 ```
 ### USE VERSION CONTROL (GIT BASICS)
 **Why it matters:** Track changes, collaborate, and roll back when needed.<br>
-**Core Git commands:**
+**Core [Git](https://git-scm.com/) commands:**
 ```bash
 git init            # Start version control
 git add script.py   # Stage changes
