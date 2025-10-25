@@ -114,6 +114,7 @@ This runs the script every day at 6:00 AM.
 │ └──────── Hour (0–23)
 └────────── Minute (0–59)
 ```
+How to configure cron schedules: [Crontab Guru](https://crontab.guru/)
 ### BASH + ETL: AUTOMATING FILE DOWNLOADS OR DAILY JOBS
 Bash is great for automating the first part of an ETL process**—Extract**.<br>
 **Example script:**
@@ -220,12 +221,25 @@ chmod +x download_csv_curl.sh
 ```
 Expected output:<br>
 File downloaded and saved as data/download_2025-07-20.csv<br><br>
-**Quick Comparison**
-| **Feature**     | **wget**              | **curl**                           |
-|-----------------|-----------------------|------------------------------------|
-| **Output**       | Saves file automatically | Needs `-o` to save to file          |
-| **Installed?**   | Often pre-installed   | Always pre-installed on macOS      |
-| **Advanced?**    | Simpler syntax        | More flexible and scriptable       |
+**Quick Comparison**<br><br>
+wget and curl are the commands that are used to HTTP requests without any GUI or software, rather we use the Terminal in Linux that provides the respective output or message. The commands are very useful for web crawling, web scraping, testing RESTful APIs, etc.<br><br>
+**Curl** is a free and open-source command-line utility tool that allows the users as well as the developers to transfer data without any UI interaction. It is commonly used in routers, mobiles, etc.<br><br>
+**wget** or GNU wget is another open-source free command-line tool for transferring files using HTTP/HTTPS, FTP, and FTPS.<br><br>
+| **Feature**                | **wget**                                         | **curl**                                                    |
+|-----------------------------|--------------------------------------------------|-------------------------------------------------------------|
+| **Purpose**                 | Primarily used for downloading files            | Used for transferring data to/from servers                  |
+| **Protocol Support**        | HTTP, HTTPS, FTP, FTPS, SFTP, and more          | HTTP, HTTPS, FTP, FTPS, SFTP, SCP, LDAP, and more           |
+| **Recursive Download**      | Yes, supports recursive downloads               | No                                                          |
+| **Authentication**          | Supports basic and digest authentication        | Supports various authentication methods including OAuth      |
+| **Resuming Downloads**      | Yes, can resume downloads using `-c`            | Yes, can resume downloads with `-C -`                       |
+| **Output Format**           | Saves files directly to disk                    | Outputs data to stdout or saves to a file with `-o`          |
+| **Headers**                 | Limited control over headers                    | Extensive control over headers with `-H`                    |
+| **Verbosity**               | Simple output, verbose with `-v`                | Detailed output with `-v` and supports tracing               |
+| **SSL Certificate Validation** | Validates certificates by default           | Validates certificates by default                            |
+| **Cookies**                 | Handles cookies through `--load-cookies`        | Handles cookies easily with `-b` and `-c`                    |
+| **Parallel Downloads**      | No                                              | Supports parallel requests with `--parallel` (newer versions) |
+| **Conclusion**              | Great for simple, recursive file downloads      | More powerful and flexible for complex HTTP interactions     |
+More info [here](https://unix.stackexchange.com/questions/47434/what-is-the-difference-between-curl-and-wget)
 ## PYTHON SCRIPTING FOR DATA
 ### VARIABLES, FUNCTIONS, LOOPS
 **VARIABLES**<br>
@@ -254,13 +268,13 @@ for name in names:
     print(name)
 ```
 ### WORKING WITH FILES (open, os, glob)
-**open() —** Read/write local files:
+**[open() —](https://docs.python.org/3/library/functions.html#open)** Read/write local files:
 ```python
 with open("../files/data.txt", "r") as f:
     content = f.read()
     print(content)
 ```
-**os —** Work with files and folders:
+**[os —](https://docs.python.org/3/library/os.html)** Work with files and folders:
 ```python
 import os
 # Create folder
@@ -272,7 +286,7 @@ with open("data/new.txt", "w") as file:
 # Rename             
 os.rename("data/new.txt", "data/changed.txt")
 ```
-**glob —** Search for files using wildcards:
+**[glob —](https://docs.python.org/3/library/glob.html)** Search for files using wildcards:
 ```python
 from glob import glob
 
@@ -282,7 +296,7 @@ for file in files:
     print(f"Found file: {file}")
 ```
 ### DATA MANIPULATION USING PANDAS
-**pandas** is a powerful library for handling data tables (DataFrames). With pandas, you can clean, filter, and analyze datasets with just a few lines.
+**[pandas](https://pandas.pydata.org/docs/)** is a powerful library for handling data tables (DataFrames). With pandas, you can clean, filter, and analyze datasets with just a few lines.
 ```python
 import pandas as pd
 df = pd.read_csv("files/sales.csv")
@@ -393,10 +407,10 @@ Create a Python script that:
 
 Example content:
 ```csv
-  product,price,quantity
-  Shoes,59.99,3
-  Hat,NaN,2
-  backpack,29.90,1
+product,price,quantity
+Shoes,59.99,3
+Hat,NaN,2
+backpack,29.90,1
 ```
 **Step-by-Step Script**
 ```python
