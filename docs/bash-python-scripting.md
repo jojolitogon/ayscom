@@ -84,17 +84,17 @@ cp *.csv backup/
 ```
 ### READING AND WRITING CSVs WITH awk AND cut
 While Bash isn’t built for complex data processing, you can do a lot with simple tools like awk, cut, and grep.<br>
-**cut —** extract columns from a file:
+**[cut —](https://www.gnu.org/software/coreutils/manual/html_node/The-cut-command.html)** extract columns from a file:
 ```bash
 #!/bin/bash
 cut -d',' -f1,3 files/sales.csv
 ```
-**awk —** pattern scanning and processing:
+**[awk —](https://www.gnu.org/software/gawk/manual/gawk.html)** pattern scanning and processing:
 ```bash
 #!/bin/bash
 awk -F',' '{print $1, $3}' files/sales.csv
 ```
-**grep —** search for lines matching a pattern:
+**[grep —](https://www.gnu.org/software/grep/manual/grep.html#grep)** search for lines matching a pattern:
 ```bash
 #!/bin/bash
 grep "Shoes" files/sales.csv
